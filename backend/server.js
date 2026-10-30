@@ -18,7 +18,10 @@ const emailTransporter = nodemailer.createTransport({
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: true,
+    credentials: true
+}));
 app.use(express.json());
 // JWT Authentication Middleware
 function authenticateToken(req, res, next) {
