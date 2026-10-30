@@ -3,7 +3,7 @@
 // Connected to PostgreSQL through backend
 // ========================================
 
-const API_URL = "http://localhost:3000/api";
+const API_URL = "https://studentms-1-59un.onrender.com/api";
 
 const token = localStorage.getItem("authToken");
 
