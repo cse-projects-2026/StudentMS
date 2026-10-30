@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | StudentMS</title>
+    <link rel="stylesheet" href="register.css">
+</head>
+<body class="auth-body">
+
+    <div class="auth-card">
+        
+<div class="brand-panel">
+    <div class="brand-content">
+        <div class="brand-icon">
+            <span>SM</span>
+        </div>
+
+        <p class="brand-tag">STUDENT MANAGEMENT SYSTEM</p>
+
+        <h2>Manage your<br>
+            <span>future better.</span>
+        </h2>
+
+        <p class="brand-description">
+            One smart place to organize student records,
+            manage courses and simplify your workflow.
+        </p>
+
+        <div class="brand-feature">
+            <span class="feature-icon">✓</span>
+            <span>Organized student records</span>
+        </div>
+
+        <div class="brand-feature">
+            <span class="feature-icon">✓</span>
+            <span>Simple and secure access</span>
+        </div>
+
+        <div class="brand-feature">
+            <span class="feature-icon">✓</span>
+            <span>Smarter student management</span>
+        </div>
+    </div>
+
+    <p class="brand-bottom">STUDENTMS · YOUR ACADEMIC WORKSPACE</p>
+</div>
+
+        <h1>Create Account</h1>
+        <p class="auth-subtitle">
+            Join StudentMS to manage your records
+        </p>
+
+        <form id="registerForm">
+            <label for="name">Full Name</label>
+            <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter your full name"
+                required
+            >
+
+            <label for="email">Email Address</label>
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                required
+            >
+
+            <label for="password">Password</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="At least 8 characters"
+                minlength="8"
+                required
+            >
+
+            <label for="courses">Course</label>
+            <input
+                type="text"
+                id="courses"
+                name="courses"
+                placeholder="e.g. Computer Science"
+            >
+
+            <label for="fee">Fee</label>
+            <input
+                type="number"
+                id="fee"
+                name="fee"
+                placeholder="Enter fee amount"
+                min="0"
+                step="0.01"
+                value="0"
+                required
+            >
+
+            <button type="submit" id="registerButton">
+                Create Account
+            </button>
+
+            <p id="registerMessage" role="status"></p>
+        </form>
+
+        <p class="auth-footer">
+            Already have an account?
+            <a href="login.html">Login here</a>
+        </p>
+    </div>
+
+    <script src="register.js"></script>
+</body>
+</html>

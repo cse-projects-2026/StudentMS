@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | StudentMS</title>
+
+  <script>
+    if (!localStorage.getItem("authToken")) {
+      window.location.replace("login.html");
+    }
+  </script>
+
+  <style>
+    :root {
+      --bg: #0a0d18;
+      --sidebar: #101426;
+      --card: #141a2d;
+      --field: #0d1222;
+      --border: #29314b;
+      --text: #f1f5f9;
+      --muted: #939db8;
+      --purple: #a78bfa;
+      --blue: #60a5fa;
+      --green: #4ade80;
+      --red: #f87171;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 245px;
+      flex-shrink: 0;
+      padding: 28px 18px;
+      display: flex;
+      flex-direction: column;
+      background: var(--sidebar);
+      border-right: 1px solid var(--border);
+    }
+
+    .sidebar h2 {
+      padding: 0 10px 35px;
+      font-size: 24px;
+      letter-spacing: -.7px;
+    }
+
+    .sidebar h2 span {
+      color: var(--purple);
+    }
+
+    .sidebar-label {
+      padding: 0 12px;
+      margin-bottom: 12px;
+      color: #68738f;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+    }
+
+    .sidebar li {
+      margin-bottom: 8px;
+      padding: 14px;
+      border-radius: 10px;
+      color: var(--muted);
+      font-size: 14px;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .sidebar li:hover,
+    .sidebar li.active {
+      color: white;
+      background: linear-gradient(100deg,
+          rgba(124, 58, 237, .24),
+          rgba(59, 130, 246, .1));
+    }
+
+    .sidebar li.active {
+      border: 1px solid rgba(167, 139, 250, .2);
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      padding: 17px 12px 0;
+      color: #7f8aa7;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    /* Main */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      padding: 0 34px 35px;
+    }
+
+    .dashboard-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 27px 0;
+      margin-bottom: 29px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .welcome-text,
+    .section-label {
+      color: var(--purple);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.7px;
+      margin-bottom: 9px;
+    }
+
+    .dashboard-header h1 {
+      font-size: clamp(24px, 3vw, 31px);
+      letter-spacing: -.7px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 13px;
+    }
+
+    #currentUser {
+      color: #c4b5fd;
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .logout-btn {
+      padding: 11px 15px;
+      border: 1px solid rgba(248, 113, 113, .23);
+      border-radius: 9px;
+      color: #fca5a5;
+      background: rgba(239, 68, 68, .09);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .logout-btn:hover {
+      background: rgba(239, 68, 68, .18);
+    }
+
+    /* Statistics */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 17px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      min-width: 0;
+      padding: 21px;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      background: var(--card);
+      transition: transform .2s, border-color .2s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: #555078;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .card-icon {
+      width: 37px;
+      height: 37px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 11px;
+      font-size: 17px;
+    }
+
+    .purple {
+      color: #c4b5fd;
+      background: #282044;
+    }
+
+    .blue {
+      color: #93c5fd;
+      background: #172b47;
+    }
+
+    .green {
+      color: #86efac;
+      background: #16352c;
+    }
+
+    .orange {
+      color: #fdba74;
+      background: #3a291e;
+    }
+
+    .card h2 {
+      font-size: clamp(22px, 2.5vw, 29px);
+      letter-spacing: -.7px;
+      overflow-wrap: anywhere;
+    }
+
+    .card>span {
+      display: block;
+      margin-top: 9px;
+      color: #7f8aa7;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    /* Sections */
+    .form-section,
+    .student-section {
+      padding: 25px;
+      margin-bottom: 26px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--card);
+    }
+
+    .section-heading,
+    .student-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .section-heading h2,
+    .student-header h2 {
+      font-size: 19px;
+      letter-spacing: -.3px;
+    }
+
+    .section-heading .section-label,
+    .student-header .section-label {
+      margin-bottom: 8px;
+    }
+
+    /* Form */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      gap: 9px;
+    }
+
+    .form-group label {
+      color: #cbd5e1;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .form-group input,
+    .form-group select,
+    #search {
+      width: 100%;
+      min-width: 0;
+      padding: 13px 14px;
+      outline: none;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      color: var(--text);
+      background: var(--field);
+      font-size: 13px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    .form-group input::placeholder,
+    #search::placeholder {
+      color: #68738f;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    #search:focus {
+      border-color: #8b5cf6;
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, .12);
+    }
+
+    select option {
+      background: var(--field);
+      color: var(--text);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 23px;
+    }
+
+    .add-btn,
+    .cancel-btn {
+      padding: 12px 19px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .add-btn {
+      color: white;
+      border: 1px solid #8b5cf6;
+      background: linear-gradient(110deg, #7c3aed, #4f46e5);
+      box-shadow: 0 5px 18px rgba(124, 58, 237, .16);
+    }
+
+    .add-btn:hover {
+      filter: brightness(1.12);
+    }
+
+    .cancel-btn {
+      color: #cbd5e1;
+      border: 1px solid var(--border);
+      background: #20263b;
+    }
+
+    .message {
+      font-size: 12px;
+      line-height: 1.6;
+      margin-top: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    /* Records table */
+    .student-header {
+      flex-wrap: wrap;
+    }
+
+    #search {
+      width: min(100%, 280px);
+    }
+
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    thead {
+      background: #1a2138;
+    }
+
+    th {
+      padding: 15px 16px;
+      color: #aab4cc;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 15px 16px;
+      border-top: 1px solid var(--border);
+      color: #d7deed;
+      font-size: 12px;
+      vertical-align: middle;
+    }
+
+    tbody tr {
+      transition: background .2s;
+    }
+
+    tbody tr:hover {
+      background: rgba(139, 92, 246, .055);
+    }
+
+    td button {
+      margin: 2px 4px 2px 0;
+    }
+
+    /* Status badges for any status text generated in the table */
+    .status-badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .status-active {
+      color: #86efac;
+      background: rgba(34, 197, 94, .12);
+    }
+
+    .status-inactive {
+      color: #fbbf24;
+      background: rgba(251, 191, 36, .10);
+    }
+
+    .footer {
+      padding: 5px 0 0;
+      color: #66718c;
+      text-align: center;
+      font-size: 11px;
+    }
+
+    @media (max-width: 1150px) {
+      .sidebar {
+        width: 205px;
+      }
+
+      .main-content {
+        padding: 0 22px 30px;
+      }
+
+      .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .container {
+        display: block;
+      }
+
+      .sidebar {
+        width: 100%;
+        padding: 17px 20px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .sidebar h2 {
+        padding: 0 3px 14px;
+      }
+
+      .sidebar-label,
+      .sidebar-bottom {
+        display: none;
+      }
+
+      .sidebar ul {
+        display: flex;
+        gap: 8px;
+      }
+
+      .sidebar li {
+        margin: 0;
+        padding: 11px 13px;
+      }
+
+      .dashboard-header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 23px 0;
+      }
+
+      .header-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .form-section,
+      .student-section {
+        padding: 19px;
+      }
+
+      .student-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      #search {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .main-content {
+        padding: 0 14px 24px;
+      }
+
+      .cards,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 18px;
+      }
+
+      .form-section,
+      .student-section {
+        padding: 16px;
+      }
+
+      .section-heading {
+        align-items: flex-start;
+      }
+    }
+
+    /* ===== STUDENTMS UI POLISH ===== */
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 24px;
+    }
+
+    body {
+      background:
+        radial-gradient(ellipse at 85% 0%, rgba(99, 102, 241, 0.08), transparent 35%),
+        var(--bg);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      align-self: flex-start;
+    }
+
+    .sidebar h2 {
+      padding-bottom: 38px;
+      background: linear-gradient(90deg, #f8fafc, #c4b5fd);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .sidebar li {
+      border: 1px solid transparent;
+      user-select: none;
+    }
+
+    .sidebar li:hover {
+      transform: translateX(3px);
+    }
+
+    .sidebar li.active {
+      box-shadow: inset 3px 0 0 #a78bfa;
+    }
+
+    .dashboard-header {
+      position: relative;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.10);
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, #8b5cf6, #60a5fa);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .card:hover::after {
+      opacity: 1;
+    }
+
+    .card-icon {
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover .card-icon {
+      transform: scale(1.07);
+    }
+
+    .add-btn,
+    .cancel-btn,
+    .logout-btn {
+      transition: transform 0.2s ease, filter 0.2s ease,
+        background-color 0.2s ease;
+    }
+
+    .add-btn:hover,
+    .cancel-btn:hover,
+    .logout-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    button:focus-visible,
+    .sidebar li:focus-visible {
+      outline: 2px solid #a78bfa;
+      outline-offset: 3px;
+    }
+
+    .table-container {
+      scrollbar-color: #414968 #111629;
+      scrollbar-width: thin;
+    }
+
+    thead {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tbody tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.012);
+    }
+
+    tbody tr:hover {
+      background: rgba(139, 92, 246, 0.09);
+    }
+
+    td button {
+      border-radius: 7px;
+      transition: filter 0.2s ease, transform 0.2s ease;
+    }
+
+    td button:hover {
+      filter: brightness(1.15);
+      transform: translateY(-1px);
+    }
+
+    .message:empty {
+      display: none;
+    }
+
+    @media (max-width: 760px) {
+      .sidebar {
+        position: relative;
+        height: auto;
+      }
+
+      .sidebar li:hover {
+        transform: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    
+/* ===== DELETE CONFIRMATION MODAL ===== */
+.delete-dialog {
+  width: min(420px, calc(100% - 32px));
+  margin: auto;
+  padding: 28px;
+  color: #e2e8f0;
+  background: #151b2e;
+  border: 1px solid #343b55;
+  border-radius: 20px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+}
+
+.delete-dialog::backdrop {
+  background: rgba(3, 7, 18, 0.78);
+  backdrop-filter: blur(5px);
+}
+
+.delete-dialog-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 18px;
+  border-radius: 14px;
+  background: rgba(248, 113, 113, 0.13);
+  color: #f87171;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.delete-dialog h2 {
+  margin-bottom: 10px;
+  font-size: 22px;
+}
+
+.delete-dialog p {
+  margin-bottom: 24px;
+  color: #aab3c8;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.delete-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.confirm-delete-btn {
+  padding: 11px 16px;
+  border: 0;
+  border-radius: 9px;
+  background: #dc404f;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.confirm-delete-btn:hover {
+  background: #ef4444;
+}
+
+.confirm-delete-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.delete-dialog button:focus-visible {
+  outline: 2px solid #a78bfa;
+  outline-offset: 3px;
+}
+
+/* ===== SUMMARY CARD POLISH ===== */
+
+.cards .card {
+  isolation: isolate;
+}
+
+.cards .card h2 {
+  font-variant-numeric: tabular-nums;
+  transition: color 0.2s ease;
+}
+
+.cards .card:hover h2 {
+  color: #c4b5fd;
+}
+
+.cards .card-top p {
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.cards .card > span {
+  padding-top: 10px;
+  border-top: 1px solid rgba(148, 163, 184, 0.10);
+}
+
+.cards .card-icon {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cards .card,
+  .cards .card h2,
+  .cards .card-icon {
+    transition: none;
+  }
+}
+
+
+/* ===== USER TABLE UI UPGRADE ===== */
+
+.student-section {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.student-header h2 {
+  margin-top: 2px;
+}
+
+.table-container {
+  border-radius: 14px;
+  background: rgba(13, 18, 34, 0.45);
+}
+
+thead th {
+  padding-top: 17px;
+  padding-bottom: 17px;
+  color: #c4b5fd;
+  background: #1a2138;
+}
+
+tbody td {
+  padding-top: 17px;
+  padding-bottom: 17px;
+}
+
+tbody tr {
+  transition: background 0.2s ease;
+}
+
+tbody tr:hover {
+  background: rgba(167, 139, 250, 0.09);
+}
+
+td button {
+  min-height: 32px;
+  padding: 7px 11px;
+  font-size: 11px;
+}
+
+#search {
+  border-radius: 10px;
+}
+
+#search:focus {
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.12);
+}
+
+@media (max-width: 480px) {
+  .student-section {
+    padding: 14px;
+  }
+
+  .student-header {
+    gap: 14px;
+  }
+}
+
+
+  </style>
+</head>
+
+<body class="dashboard-body">
+
+  <div class="container">
+
+    <aside class="sidebar">
+      <h2>Student<span>MS</span></h2>
+
+      <p class="sidebar-label">MAIN MENU</p>
+
+      <ul>
+        <li class="active" id="dashboardNav">▦ &nbsp; Dashboard</li>
+        <li id="usersNav">♙ &nbsp; Users</li>
+      </ul>
+
+      <div class="sidebar-bottom">
+        <p>Student Management System</p>
+        <p>Admin Workspace</p>
+      </div>
+    </aside>
+
+    <main class="main-content">
+
+      <header class="dashboard-header">
+        <div>
+          <p class="welcome-text">WELCOME BACK</p>
+          <h1>Dashboard Overview</h1>
+          <p class="subtitle">Manage your users and course records.</p>
+        </div>
+
+        <div class="header-actions">
+          <span id="currentUser">Loading...</span>
+          <button class="logout-btn" id="logoutButton">↗ Logout</button>
+        </div>
+      </header>
+
+      <section class="cards">
+
+        <article class="card">
+          <div class="card-top">
+            <p>Total Users</p>
+            <span class="card-icon purple">♙</span>
+          </div>
+          <h2 id="totalUsers">0</h2>
+          <span>Registered accounts</span>
+        </article>
+
+        <article class="card">
+          <div class="card-top">
+            <p>Active Users</p>
+            <span class="card-icon green">✓</span>
+          </div>
+          <h2 id="activeUsers">0</h2>
+          <span>Currently active</span>
+        </article>
+
+        <article class="card">
+          <div class="card-top">
+            <p>Inactive Users</p>
+            <span class="card-icon orange">◷</span>
+          </div>
+          <h2 id="inactiveUsers">0</h2>
+          <span>Currently inactive</span>
+        </article>
+
+        <article class="card">
+          <div class="card-top">
+            <p>Total Fees</p>
+            <span class="card-icon blue">₹</span>
+          </div>
+          <h2 id="totalFees">₹0</h2>
+          <span>Sum of recorded fees</span>
+        </article>
+
+      </section>
+
+      <section class="form-section" id="userFormSection">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">USER MANAGEMENT</p>
+            <h2 id="formTitle">Add New User</h2>
+          </div>
+        </div>
+
+        <form id="userForm">
+          <input type="hidden" id="userId">
+
+          <div class="form-grid">
+
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" placeholder="Enter full name" required>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" placeholder="Enter email address" required>
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" placeholder="Minimum 8 characters" minlength="8"
+                autocomplete="new-password" required>
+            </div>
+
+            <div class="form-group">
+              <label for="courses">Course</label>
+              <input type="text" id="courses" placeholder="e.g. Computer Science" required>
+            </div>
+
+            <div class="form-group">
+              <label for="fee">Fee (₹)</label>
+              <input type="number" id="fee" min="0" step="0.01" placeholder="Enter fee" required>
+            </div>
+
+            <div class="form-group">
+              <label for="is_active">Account Status</label>
+              <select id="is_active" required>
+                <option value="true">Active</option>
+                <option value="false">Inactive</option>
+              </select>
+            </div>
+
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="add-btn" id="saveButton">
+              Add User
+            </button>
+
+            <button type="button" class="cancel-btn" id="cancelButton" hidden>
+              Cancel Edit
+            </button>
+          </div>
+
+          <p id="formMessage" class="message" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="student-section" id="usersSection">
+        <div class="student-header">
+          <div>
+            <p class="section-label">DATABASE RECORDS</p>
+            <h2>User Records</h2>
+          </div>
+
+          <input type="search" id="search" placeholder="Search by name or email..."
+            aria-label="Search users by name or email">
+        </div>
+
+        <p id="tableMessage" class="message" role="status" aria-live="polite"></p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Course</th>
+                <th>Fee</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody id="userTable">
+              <tr>
+                <td colspan="7">Loading records...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer class="footer">
+        StudentMS · Admin Dashboard
+      </footer>
+
+    </main>
+  </div>
+
+  <dialog id="deleteConfirmDialog" class="delete-dialog">
+    <div class="delete-dialog-icon">!</div>
+    <h2>Delete student?</h2>
+    <p id="deleteConfirmText">
+      This action cannot be undone.
+    </p>
+
+    <div class="delete-dialog-actions">
+      <button type="button" id="cancelDeleteButton" class="cancel-btn">
+        Cancel
+      </button>
+      <button type="button" id="confirmDeleteButton" class="confirm-delete-btn">
+        Delete Student
+      </button>
+    </div>
+  </dialog>
+
+
+  <script src="script.js"></script>
+
+  <script>
+    // Sidebar shortcuts; these do not change backend functionality.
+    document.getElementById("dashboardNav").addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    document.getElementById("usersNav").addEventListener("click", () => {
+      document.getElementById("usersSection").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+    
+    
+  </script>
+
+</body>
+
+</html>

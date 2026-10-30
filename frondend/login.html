@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | StudentMS</title>
+    <style>
+        .password-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-right: 12px;
+            background: #0e1427;
+            border: 1px solid #343d5c;
+            border-radius: 9px;
+        }
+
+        .password-wrapper input {
+            border: none;
+            background: transparent;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .password-wrapper:focus-within {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+        }
+
+        .toggle-password {
+            background: transparent;
+            border: none;
+            color: #a78bfa;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: #0b1020;
+            color: #f8fafc;
+        }
+
+        .login-container {
+            width: 420px;
+            max-width: 100%;
+            padding: 36px;
+            border: 1px solid #303653;
+            border-radius: 20px;
+            background: #151b31;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #a78bfa;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            color: #a7b0ca;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 9px;
+            color: #dce1f2;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #343d5c;
+            border-radius: 9px;
+            background: #0e1427;
+            color: white;
+            font-size: 15px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .login-btn:hover {
+            opacity: 0.9;
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        .message {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .register-link {
+            margin-top: 25px;
+            text-align: center;
+            color: #a7b0ca;
+            font-size: 14px;
+        }
+
+        .register-link a {
+            color: #a78bfa;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== PREMIUM LOGIN UI ===== */
+
+        body {
+            background:
+                radial-gradient(ellipse at 15% 15%, rgba(139, 92, 246, 0.18), transparent 40%),
+                radial-gradient(ellipse at 85% 85%, rgba(59, 130, 246, 0.14), transparent 40%),
+                #080c19;
+        }
+
+        .login-container {
+            position: relative;
+            overflow: hidden;
+            background: rgba(21, 27, 49, 0.94);
+            border: 1px solid rgba(167, 139, 250, 0.24);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+            animation: loginAppear 0.55s ease both;
+        }
+
+        .login-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #8b5cf6, #60a5fa, #8b5cf6);
+        }
+
+        .logo h1 {
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, #c4b5fd, #818cf8);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-group input {
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .login-btn {
+            margin-top: 4px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .login-btn:hover:not(:disabled) {
+            opacity: 1;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
+        }
+
+        .login-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .register-link a {
+            transition: color 0.2s ease;
+        }
+
+        .register-link a:hover {
+            color: #c4b5fd;
+        }
+
+        @keyframes loginAppear {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 28px 22px;
+                border-radius: 16px;
+            }
+
+            .logo h1 {
+                font-size: 28px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .login-container {
+                animation: none;
+            }
+        }
+        
+/* ===== STUDENTMS PREMIUM LOGIN LAYOUT ===== */
+
+.login-container {
+    width: min(100%, 1000px);
+    max-width: 1000px;
+    min-width: 0;
+    margin: auto;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 0.95fr 1.05fr;
+    align-items: stretch;
+    overflow: hidden;
+    border: 1px solid rgba(167, 139, 250, 0.25);
+    border-radius: 24px;
+    background: #111a2d;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+}
+
+/* Left branding panel */
+.login-container .brand-panel {
+    grid-column: 1;
+    grid-row: 1 / span 10;
+    min-width: 0;
+    padding: 38px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 25px;
+    background:
+        radial-gradient(ellipse at 15% 15%, rgba(167, 139, 250, 0.22), transparent 45%),
+        linear-gradient(145deg, #27205b, #171938 70%, #111a2d);
+    border-right: 1px solid rgba(148, 163, 184, 0.18);
+    text-align: left;
+}
+
+.login-container .brand-icon {
+    width: 50px;
+    height: 50px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #8b5cf6, #4f46e5);
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+    color: #fff;
+    font-weight: 800;
+    font-size: 19px;
+}
+
+.login-container .brand-tag {
+    margin-top: 30px;
+    color: #c4b5fd;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    line-height: 1.8;
+}
+
+.login-container .brand-content h2 {
+    margin-top: 14px;
+    color: #fff;
+    font-size: clamp(28px, 3vw, 37px);
+    line-height: 1.2;
+}
+
+.login-container .brand-content h2 span {
+    color: #c4b5fd;
+}
+
+.login-container .brand-description {
+    margin-top: 17px;
+    color: #b8c2d7;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.login-container .brand-feature {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 17px;
+    color: #e2e8f0;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.login-container .feature-icon {
+    flex-shrink: 0;
+    width: 23px;
+    height: 23px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(167, 139, 250, 0.16);
+    color: #c4b5fd;
+}
+
+.login-container .brand-bottom {
+    color: #8792b1;
+    font-size: 9px;
+    letter-spacing: 0.7px;
+    line-height: 1.8;
+}
+
+/* Right login form */
+.login-container > .logo,
+.login-container > h1,
+.login-container > p,
+.login-container > form,
+.login-container > .login-form,
+.login-container > .auth-footer {
+    grid-column: 2;
+    min-width: 0;
+    margin-left: 35px;
+    margin-right: 35px;
+}
+
+.login-container > .logo {
+    margin-top: 35px;
+}
+
+.login-container > h1 {
+    margin-top: 8px;
+}
+
+.login-container > p {
+    margin-top: 8px;
+}
+
+.login-container > form,
+.login-container > .login-form {
+    margin-top: 25px;
+    margin-bottom: 0;
+    width: auto;
+    text-align: left;
+}
+
+.login-container form label {
+    display: block;
+    margin: 0 0 8px;
+    color: #dce4f1;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.login-container form input {
+    max-width: 100%;
+    min-width: 0;
+    background: #0b1221;
+    color: #f8fafc;
+    border: 1px solid #33415b;
+    border-radius: 9px;
+}
+
+.login-container form input:focus {
+    outline: none;
+    border-color: #a78bfa;
+    box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.13);
+}
+
+.login-container form button[type="submit"] {
+    width: 100%;
+    min-height: 46px;
+    margin-top: 18px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(110deg, #7c3aed, #4f46e5);
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.2s, transform 0.2s;
+}
+
+.login-container form button[type="submit"]:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+/* Password row: keep input and Show button aligned */
+.login-container .password-wrapper,
+.login-container .password-group {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    min-width: 0;
+}
+
+.login-container .password-wrapper input,
+.login-container .password-group input {
+    flex: 1;
+    width: 0;
+    min-width: 0;
+}
+
+.login-container .password-wrapper button,
+.login-container .password-group button {
+    flex-shrink: 0;
+}
+
+/* Tablet and mobile */
+@media (max-width: 760px) {
+    body {
+        padding: 16px;
+    }
+
+    .login-container {
+        width: 100%;
+        max-width: 520px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .login-container .brand-panel {
+        padding: 24px;
+        gap: 18px;
+        border-right: none;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+    }
+
+    .login-container .brand-tag {
+        margin-top: 0;
+    }
+
+    .login-container .brand-content h2 {
+        font-size: 27px;
+    }
+
+    .login-container .brand-description {
+        margin-top: 10px;
+    }
+
+    .login-container .brand-feature {
+        margin-top: 10px;
+    }
+
+    .login-container > .logo,
+    .login-container > h1,
+    .login-container > p,
+    .login-container > form,
+    .login-container > .login-form,
+    .login-container > .auth-footer {
+        margin-left: 24px;
+        margin-right: 24px;
+    }
+
+    .login-container > .logo {
+        margin-top: 25px;
+    }
+
+    .login-container > form,
+    .login-container > .login-form {
+        margin-top: 20px;
+    }
+
+    .login-container > .auth-footer {
+        margin-bottom: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 12px;
+    }
+
+    .login-container {
+        border-radius: 18px;
+    }
+
+    .login-container .brand-panel {
+        padding: 20px;
+    }
+
+    .login-container > .logo,
+    .login-container > h1,
+    .login-container > p,
+    .login-container > form,
+    .login-container > .login-form,
+    .login-container > .auth-footer {
+        margin-left: 18px;
+        margin-right: 18px;
+    }
+
+    .login-container form input {
+        width: 100%;
+        font-size: 16px;
+    }
+}
+
+/* ===== PREMIUM FORGOT PASSWORD LINK ===== */
+
+.login-container a[href*="forget"],
+.login-container a[href*="forgot"] {
+    display: inline-block;
+    margin-top: 9px;
+    color: #b9a4ff;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.login-container a[href*="forget"]:hover,
+.login-container a[href*="forgot"]:hover {
+    color: #e0d7ff;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* Keep password section neat */
+.login-container .password-group,
+.login-container .password-wrapper {
+    margin-bottom: 0;
+}
+
+.login-container input {
+    outline-offset: 2px;
+}
+
+
+        
+    </style>
+
+</head>
+
+<body>
+    <main class="login-container">
+        
+<section class="brand-panel">
+    <div class="brand-content">
+        <div class="brand-icon">SM</div>
+
+        <p class="brand-tag">STUDENT MANAGEMENT SYSTEM</p>
+
+        <h2>Welcome<br>
+            <span>back!</span>
+        </h2>
+
+        <p class="brand-description">
+            Your academic workspace, all in one place.
+            Sign in to manage student records and stay organized.
+        </p>
+
+        <div class="brand-feature">
+            <span class="feature-icon">✓</span>
+            <span>Organized student records</span>
+        </div>
+
+        <div class="brand-feature">
+            <span class="feature-icon">✓</span>
+            <span>Simple and secure access</span>
+        </div>
+
+        <div class="brand-feature">
+            <span class="feature-icon">✓</span>
+            <span>Your workspace, ready when you are</span>
+        </div>
+    </div>
+
+    <p class="brand-bottom">
+        STUDENTMS · YOUR ACADEMIC WORKSPACE
+    </p>
+</section>
+
+        <div class="logo">
+            <h1>StudentMS</h1>
+            <p>Sign in to your account</p>
+        </div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="Enter your registered email" autocomplete="username"
+                    required>
+            </div>
+
+<div class="form-group">
+    <label for="password">Password</label>
+
+    <div class="password-wrapper">
+        <input
+            type="password"
+            id="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required
+        >
+
+        <button
+            type="button"
+            id="togglePassword"
+            class="toggle-password"
+        >
+            Show
+        </button>
+    </div>
+
+    <a href="forget_password.html">Forget Password?</a>
+</div>
+
+
+            <button type="submit" class="login-btn" id="loginButton">
+                Login
+            </button>
+
+            <p id="message" class="message" role="status"></p>
+        </form>
+
+        <p class="register-link">
+            Don't have an account?
+            <a href="register.html">Create account</a>
+        </p>
+    </main>
+
+    <script>
+        const loginForm = document.getElementById("loginForm");
+        const message = document.getElementById("message");
+        const loginButton = document.getElementById("loginButton");
+
+        loginForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            message.textContent = "";
+            loginButton.disabled = true;
+            loginButton.textContent = "Signing in...";
+
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+
+            try {
+                const response = await fetch(
+                    "http://localhost:3000/api/login",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ email: email, password: password })
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || "Login failed.");
+                }
+
+                if (!data.token || !data.user) {
+                    throw new Error("The server returned an invalid login response.");
+                }
+
+                localStorage.setItem("authToken", data.token);
+                localStorage.setItem("user", JSON.stringify(data.user));
+
+                // Remove the old demo-login flag.
+                localStorage.removeItem("isLoggedIn");
+
+                message.style.color = "#4ade80";
+                message.textContent = "Login successful! Opening dashboard...";
+
+                setTimeout(() => {
+                    if (data.user.role === "admin") {
+                        window.location.href = "./index.html";
+                    } else if (data.user.role === "student") {
+                        window.location.href = "./student_dashboard.html";
+                    } else {
+                        message.style.color = "#f87171";
+                        message.textContent = "Invalid account role.";
+                    }
+                }, 700);
+
+            } catch (error) {
+                message.style.color = "#f87171";
+                message.textContent =
+                    error.message || "Unable to connect to the server.";
+            } finally {
+                loginButton.disabled = false;
+                loginButton.textContent = "Login";
+            }
+        });
+
+        const passwordInput = document.getElementById("password");
+        const togglePassword = document.getElementById("togglePassword");
+
+        togglePassword.addEventListener("click", function () {
+            const isHidden = passwordInput.type === "password";
+
+            passwordInput.type = isHidden ? "text" : "password";
+            togglePassword.textContent = isHidden ? "Hide" : "Show";
+        });
+
+    </script>
+
+</body>
+
+</html>
