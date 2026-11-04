@@ -263,6 +263,7 @@ app.get("/api/users", authenticateToken, requireAdmin, async (req, res) => {
         const result = await pool.query(
             `SELECT id, name, email, is_active, fee, courses
              FROM public.users
+             WHERE role = 'student'
              ORDER BY id DESC`
         );
 
