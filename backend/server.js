@@ -85,6 +85,7 @@ app.get("/api/health", async (req, res) => {
 app.post("/api/register", async (req, res) => {
     try {
         const { name, email, password, fee, courses } = req.body;
+        const role = "student";
 
         if (
             typeof name !== "string" ||
@@ -120,8 +121,8 @@ app.post("/api/register", async (req, res) => {
 
         const result = await pool.query(
             `INSERT INTO users
-                (name, email, password_hash, is_active, fee, courses)
-             VALUES ($1, $2, $3, $4, $5, $6)
+                (name, email, password_hash, is_active, fee, courses, role)
+            VALUES($1, $2, $3, $4, $5, $6, $7)
              RETURNING id, name, email, is_active, fee, courses`,
             [
                 name.trim(),
@@ -129,7 +130,8 @@ app.post("/api/register", async (req, res) => {
                 passwordHash,
                 true,
                 studentFee,
-                courses ?? ""
+                courses ?? "",
+                role
             ]
         );
 
@@ -256,7 +258,7 @@ app.post("/api/login", async (req, res) => {
     }
 });
 // GET ALL USERS
-app.get("/api/users",authenticateToken ,requireAdmin, async (req, res) => {
+app.get("/api/users", authenticateToken, requireAdmin, async (req, res) => {
     try {
         const result = await pool.query(
             `SELECT id, name, email, is_active, fee, courses
@@ -274,7 +276,7 @@ app.get("/api/users",authenticateToken ,requireAdmin, async (req, res) => {
 });
 
 // ADD STUDENT - Protected Route
-app.post("/api/users", authenticateToken,requireAdmin, async (req, res) => {
+app.post("/api/users", authenticateToken, requireAdmin, async (req, res) => {
     try {
         const { name, email, password, fee, courses } = req.body;
 
@@ -342,7 +344,7 @@ app.post("/api/users", authenticateToken,requireAdmin, async (req, res) => {
     }
 });
 
- // UPDATE STUDENT - Protected Route
+// UPDATE STUDENT - Protected Route
 app.put("/api/users/:id", authenticateToken, requireAdmin, async (req, res) => {
     try {
         const id = Number(req.params.id);
@@ -428,7 +430,7 @@ app.put("/api/users/:id", authenticateToken, requireAdmin, async (req, res) => {
 
 
 // DELETE STUDENT - Protected Route
-app.delete("/api/users/:id", authenticateToken,requireAdmin, async (req, res) => {
+app.delete("/api/users/:id", authenticateToken, requireAdmin, async (req, res) => {
     try {
         const id = Number(req.params.id);
 
@@ -548,7 +550,7 @@ app.post("/api/forgot-password", async (req, res) => {
 
         const resetUrl =
             `${process.env.APP_BASE_URL}/reset_password.html?token=${resetToken}`;
-            
+
 
         await emailTransporter.sendMail({
             from: process.env.SMTP_FROM,
