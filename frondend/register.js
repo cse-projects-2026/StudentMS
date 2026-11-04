@@ -18,7 +18,7 @@ registerForm.addEventListener("submit", async (event) => {
     };
 
     try {
-        const response = await fetch("https://studentms-1-59un.onrender.com/api", {
+        const response = await fetch("https://studentms-1-59un.onrender.com/api/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
