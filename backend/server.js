@@ -67,20 +67,24 @@ app.get("/", (req, res) => {
 // Test PostgreSQL connection
 app.get("/api/health", async (req, res) => {
     try {
-        const result = await pool.query("SELECT NOW()");
+        const result = await pool.query(`
+            SELECT
+                current_database() AS database_name,
+                current_user AS database_user,
+                to_regclass('public.password_reset_tokens') AS reset_table
+        `);
 
         res.json({
             message: "PostgreSQL connected successfully!",
-            time: result.rows[0].now
+            ...result.rows[0]
         });
     } catch (error) {
         console.error("Database error:", error.message);
         res.status(500).json({
-            error: "Database connection failed"
+            error: error.message
         });
     }
 });
-
 // Register a new student
 app.post("/api/register", async (req, res) => {
     try {
