@@ -578,7 +578,7 @@ app.post("/api/forgot-password", async (req, res) => {
         return res.json({ message });
 
     } catch (error) {
-        console.error("Forgot password error:", error.message);
+        console.error("Forgot password error:", error);
 
         // Invalidate a newly created token if email delivery fails.
         if (resetToken) {
