@@ -535,7 +535,7 @@ app.post("/api/forgot-password", async (req, res) => {
 
         // Invalidate previous unused reset links for this user.
         await pool.query(
-            `UPDATE password_reset_tokens
+            `UPDATE public.public.password_reset_tokens
              SET used_at = NOW()
              WHERE user_id = $1 AND used_at IS NULL`,
             [user.id]
@@ -543,7 +543,7 @@ app.post("/api/forgot-password", async (req, res) => {
 
         // Token expires in 15 minutes.
         await pool.query(
-            `INSERT INTO password_reset_tokens
+            `INSERT INTO public.password_reset_tokens
              (user_id, token_hash, expires_at)
              VALUES ($1, $2, NOW() + INTERVAL '15 minutes')`,
             [user.id, tokenHash]
@@ -585,7 +585,7 @@ app.post("/api/forgot-password", async (req, res) => {
 
             try {
                 await pool.query(
-                    `UPDATE password_reset_tokens
+                    `UPDATE public.password_reset_tokens
                      SET used_at = NOW()
                      WHERE token_hash = $1 AND used_at IS NULL`,
                     [tokenHash]
@@ -639,7 +639,7 @@ app.post("/api/reset-password", async (req, res) => {
 
         const result = await client.query(
             `SELECT id, user_id
-             FROM password_reset_tokens
+             FROM public.password_reset_tokens
              WHERE token_hash = $1
                AND used_at IS NULL
                AND expires_at > NOW()
@@ -667,7 +667,7 @@ app.post("/api/reset-password", async (req, res) => {
         );
 
         await client.query(
-            `UPDATE password_reset_tokens
+            `UPDATE public.password_reset_tokens
              SET used_at = NOW()
              WHERE user_id = $1
                AND used_at IS NULL`,
