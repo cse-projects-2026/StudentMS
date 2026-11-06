@@ -535,7 +535,7 @@ app.post("/api/forgot-password", async (req, res) => {
 
         // Invalidate previous unused reset links for this user.
         await pool.query(
-            `UPDATE public.public.password_reset_tokens
+            `UPDATE public.password_reset_tokens
              SET used_at = NOW()
              WHERE user_id = $1 AND used_at IS NULL`,
             [user.id]
