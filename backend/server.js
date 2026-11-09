@@ -557,7 +557,7 @@ app.post("/api/forgot-password", async (req, res) => {
         const resetUrl =
             `${process.env.APP_BASE_URL}/reset_password.html?token=${resetToken}`;
 
-
+        console.log("Private key loaded:", !!process.env.EMAILJS_PRIVATE_KEY);
         await emailjs.send(
             process.env.EMAILJS_SERVICE_ID,
             process.env.EMAILJS_TEMPLATE_ID,
