@@ -6,9 +6,14 @@ require("dotenv").config();
 const nodemailer = require("nodemailer");
 const emailjs = require("@emailjs/nodejs");
 emailjs.init({
-    publicKey: process.env.EMAILJS_PUBLIC_KEY,
-    privateKey: process.env.EMAILJS_PRIVATE_KEY
+    publicKey: process.env.EMAILJS_PUBLIC_KEY?.trim(),
+    privateKey: process.env.EMAILJS_PRIVATE_KEY?.trim()
 });
+
+console.log(
+    "Private key length:",
+    process.env.EMAILJS_PRIVATE_KEY?.trim().length
+);
 const crypto = require("crypto");
 
 const emailTransporter = nodemailer.createTransport({
