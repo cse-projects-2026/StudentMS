@@ -5,6 +5,10 @@ const pool = require("./db");
 require("dotenv").config();
 const nodemailer = require("nodemailer");
 const emailjs = require("@emailjs/nodejs");
+emailjs.init({
+    publicKey: process.env.EMAILJS_PUBLIC_KEY,
+    privateKey: process.env.EMAILJS_PRIVATE_KEY
+});
 const crypto = require("crypto");
 
 const emailTransporter = nodemailer.createTransport({
@@ -564,10 +568,6 @@ app.post("/api/forgot-password", async (req, res) => {
             {
                 to_email: user.email,
                 reset_link: resetUrl
-            },
-            {
-                publicKey: process.env.EMAILJS_PUBLIC_KEY,
-                privateKey: process.env.EMAILJS_PRIVATE_KEY
             }
         );
 
