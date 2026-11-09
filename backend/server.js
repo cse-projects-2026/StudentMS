@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const pool = require("./db");
 require("dotenv").config();
 const nodemailer = require("nodemailer");
+const emailjs = require("@emailjs/nodejs");
 const crypto = require("crypto");
 
 const emailTransporter = nodemailer.createTransport({
@@ -557,23 +558,17 @@ app.post("/api/forgot-password", async (req, res) => {
             `${process.env.APP_BASE_URL}/reset_password.html?token=${resetToken}`;
 
 
-        await emailTransporter.sendMail({
-            from: process.env.SMTP_FROM,
-            to: user.email,
-            subject: "StudentMS Password Reset",
-            text:
-                `A password reset was requested for your StudentMS account.\n\n` +
-                `Open this link within 15 minutes to reset your password:\n${resetUrl}\n\n` +
-                `If you did not request this, you can ignore this email.`,
-            html: `
-                <p>A password reset was requested for your StudentMS account.</p>
-                <p>
-                    <a href="${resetUrl}">Reset your password</a>
-                </p>
-                <p>This link expires in 15 minutes. If you did not request
-                this, you can ignore this email.</p>
-            `
-        });
+        await emailjs.send(
+            process.env.EMAILJS_SERVICE_ID,
+            process.env.EMAILJS_TEMPLATE_ID,
+            {
+                to_email: user.email,
+                reset_link: resetUrl
+            },
+            {
+                publicKey: process.env.EMAILJS_PUBLIC_KEY
+            }
+        );
 
         return res.json({ message });
 
