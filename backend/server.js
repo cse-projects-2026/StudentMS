@@ -695,5 +695,5 @@ app.post("/api/reset-password", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:3000\api\health`);
+    console.log(`Server running on port ${PORT}`);
 });
