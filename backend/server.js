@@ -566,7 +566,8 @@ app.post("/api/forgot-password", async (req, res) => {
                 reset_link: resetUrl
             },
             {
-                publicKey: process.env.EMAILJS_PUBLIC_KEY
+                publicKey: process.env.EMAILJS_PUBLIC_KEY,
+                privateKey: process.env.EMAILJS_PRIVATE_KEY
             }
         );
 
